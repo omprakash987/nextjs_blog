@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    async rewrites() {
+        return [
+          {
+            source: '/api/:path*',
+            destination: 'https://api.example.com/:path*',
+          },
+        ]
+      },
+};
 
 export default nextConfig;
 
@@ -9,13 +18,3 @@ export default nextConfig;
 
 
 
-module.exports = {
-    async rewrites() {
-        return [
-          {
-            source: '/api/:path*',
-            destination: 'https://api.example.com/:path*',
-          },
-        ]
-      },
-  };
