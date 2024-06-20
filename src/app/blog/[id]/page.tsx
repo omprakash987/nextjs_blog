@@ -15,7 +15,7 @@ export default function Blog(){
 
     const { id } = params;
     const {loading,blog} = useBlog({
-        id:id||""
+        id:String(id) 
 
     })
    

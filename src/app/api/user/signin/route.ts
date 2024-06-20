@@ -20,6 +20,16 @@ export async function POST(req:NextRequest,res:NextResponse){
         })
     }
     const prisma = new PrismaClient(); 
+    const jwtsecret = process.env.JWT_SECRET; 
+    if(!jwtsecret){
+        return NextResponse.json({
+            message:"you dont have jwtsecret"
+
+        },{status:500})
+        
+    }
+
+
 
 
     try{
@@ -40,7 +50,7 @@ export async function POST(req:NextRequest,res:NextResponse){
 
         const token =  jwt.sign({
             id:user.id
-        },process.env.JWT_SECRET)
+        },jwtsecret)
 
         return NextResponse.json({
             token
