@@ -14,7 +14,15 @@ export async function POST(req:NextRequest,res:NextResponse){
     
 
 
-    const {success} = createBlogInput.safeParse(body)
+    const {success} = createBlogInput.safeParse(body); 
+    const jwtsecret = process.env.JWT_SECRET; 
+   if(!jwtsecret){
+    return NextResponse.json({
+        message:"jwt secret is not available"
+
+    },{status:500})
+    
+   }
 
     if(!success){
         return NextResponse.json({
@@ -25,7 +33,8 @@ export async function POST(req:NextRequest,res:NextResponse){
     let user;
 
     try {
-        user = jwt.verify(authHeader, process.env.JWT_SECRET);
+        user = jwt.verify(authHeader, jwtsecret);
+
     } catch (e) {
         return NextResponse.json({
             message: "You are not logged in"
