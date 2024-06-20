@@ -50,11 +50,19 @@ export async function POST(req:NextRequest,res:NextResponse){
 
         const token =  jwt.sign({
             id:user.id
-        },jwtsecret)
+        },jwtsecret); 
 
-        return NextResponse.json({
-            token
+
+        const response = NextResponse.json({
+            message:"Login successful",
+            success:true,
         })
+
+        response.cookies.set("token",token,{
+            httpOnly:true,
+        })
+
+        return response; 
 
     }
     catch(e){
