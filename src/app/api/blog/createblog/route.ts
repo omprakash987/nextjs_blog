@@ -1,83 +1,73 @@
-
-
-import {updateBlogInput, createBlogInput } from "@/zod";
+import { updateBlogInput, createBlogInput } from "@/zod";
 import { PrismaClient } from "@prisma/client";
-import { verify } from "crypto";
- import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { NextResponse, NextRequest } from "next/server";
 
-import { NextResponse,NextRequest } from "next/server";
+export async function POST(req: NextRequest, res: NextResponse) {
+    const body = await req.json();
+    console.log(body);
 
+    const { success } = createBlogInput.safeParse(body);
 
-export async function POST(req:NextRequest,res:NextResponse){
-    const body = await req.json(); 
-    console.log(body); 
-    
-
-
-    const {success} = createBlogInput.safeParse(body); 
-    const jwtsecret = process.env.JWT_SECRET; 
-   if(!jwtsecret){
-    return NextResponse.json({
-        message:"jwt secret is not available"
-
-    },{status:500})
-    
-   }
-
-    if(!success){
+    if (!success) {
         return NextResponse.json({
-            message:"input is not correct"
-        })
+            message: "Input is not correct"
+        });
     }
+
     const authHeader = req.headers.get("authorization") || "";
-    let user;
+    let user: string | JwtPayload;
+
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+        return NextResponse.json({
+            message: "JWT secret is not defined"
+        }, { status: 500 });
+    }
 
     try {
-        user = jwt.verify(authHeader, jwtsecret);
-
+        user = jwt.verify(authHeader, jwtSecret);
     } catch (e) {
         return NextResponse.json({
             message: "You are not logged in"
         }, { status: 401 });
     }
 
-    if (!user || !user.id) {
+    if (!isJwtPayload(user) || !user.id) {
         return NextResponse.json({
             message: "You are not logged in"
         }, { status: 401 });
     }
 
     const prisma = new PrismaClient();
-    const authorId = user.id;
+    const authorId = user.id as string;
 
-    if(!authorId){
+    if (!authorId) {
         return NextResponse.json({
-            message:"authorid is not created"
-            
-        })
+            message: "Author ID is not created"
+        });
     }
 
-    try{
+    try {
         const blog = await prisma.blog.create({
-            data:{
-                title:body.title,
-                content:body.content,
-                authorId:authorId
-
+            data: {
+                title: body.title,
+                content: body.content,
+                authorId: Number(authorId)
             }
-        })
+        });
         return NextResponse.json({
-            id:blog.id
-           })
+            id: blog.id
+        });
+    } catch (e) {
+        console.log("Error from create blog", e);
+        return NextResponse.json({
+            message: "Blog is not created"
+        }, { status: 411 });
     }
-    catch(e){
-        console.log("error from create blog",e)
-return NextResponse.json({
-    message:"blog is not created"
+}
 
-},{status:411})
-
-    }
-  
-
+// Type guard to check if the value is a JwtPayload
+function isJwtPayload(value: string | JwtPayload): value is JwtPayload {
+    return (value as JwtPayload).id !== undefined;
 }
