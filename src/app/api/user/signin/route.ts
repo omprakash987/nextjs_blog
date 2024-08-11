@@ -1,19 +1,16 @@
 
  
 import { PrismaClient } from "@prisma/client";
-import { sign } from "crypto";
 import { NextRequest,NextResponse } from "next/server";
 
 import jwt from 'jsonwebtoken'
 import { signinInput } from "@/zod";
-
-
-
+ 
 
 export async function POST(req:NextRequest,res:NextResponse){
     const body = await req.json(); 
-    const {success} = signinInput.safeParse(body)
-    if(!success){
+    const validation = signinInput.safeParse(body)
+    if(!validation.success){
         return NextResponse.json({
             message:"input is not correct"
             
@@ -48,19 +45,20 @@ export async function POST(req:NextRequest,res:NextResponse){
             })
         }
 
-        const token =  jwt.sign({
-            id:user.id
-        },jwtsecret); 
+       
+        
+        const token = jwt.sign({ id: user.id }, jwtsecret, { expiresIn: '1h' });
+
+console.log("token from signIn",token)
 
 
         const response = NextResponse.json({
-            message:"Login successful",
-            success:true,
-        })
-
-        response.cookies.set("token",token,{
-            httpOnly:true,
-        })
+            message: "Login successful",
+            success: true,
+            token // Send token to frontend
+        });
+       
+        response.headers.set('Set-Cookie', `token=${token}; HttpOnly; Path=/; Max-Age=3600;`);
 
         return response; 
 

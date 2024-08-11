@@ -13,7 +13,8 @@ const client = new PrismaClient();
 
 export async function POST(req:NextRequest,res:NextResponse) {
     const body =await req.json(); 
-    const {success} = signupInput.safeParse(body)
+    const success= signupInput.safeParse(body);
+
     if(!success){
         return NextResponse.json({
             message:"input is not correct"
@@ -38,7 +39,7 @@ export async function POST(req:NextRequest,res:NextResponse) {
             data:{
                 name:body.name,
                 username:body.username,
-                password:body.password
+                password:body.password,
             }
         })
         
@@ -48,7 +49,7 @@ export async function POST(req:NextRequest,res:NextResponse) {
        
 
 
-
+console.log(token); 
        return NextResponse.json({
         token
        })

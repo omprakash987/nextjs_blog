@@ -42,7 +42,7 @@ export default function Signup(){
                     <button
                    onClick={async()=>{
                     const response = await axios.post("http://localhost:3000/api/user/signup",{
-                       name, username,password
+                       name,username,password
                     }); 
                     const token = response.data.token; 
                     console.log("token",token)

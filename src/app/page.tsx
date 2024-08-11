@@ -4,18 +4,25 @@ import { motion } from "framer-motion";
 import React from "react";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { useRouter } from "next/navigation";
+import { NextRequest, NextResponse } from "next/server";
+
 
 
 export default function AuroraBackgroundDemo() {
   const router = useRouter(); 
 
 
-  const HandleOnclick = ()=>{
-
-    router.push('/signup')
-
-  }
-
+  const HandleOnclick = async() => {
+    
+   
+   const token = localStorage.getItem('token'); 
+    console.log("token", token);
+    if (token) {
+      router.push('/blogs');
+    } else {
+      router.push('/signup');
+    }
+  };
 
 
   return (

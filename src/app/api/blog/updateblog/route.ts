@@ -9,21 +9,23 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse,NextRequest } from "next/server";
 
 
+const prisma = new PrismaClient(); 
+
 export async function PUT(req:NextRequest,res:NextResponse){
     const body = await req.json(); 
     console.log(body); 
 
 
-    const {success} = updateBlogInput.safeParse(body)
+    const validation = updateBlogInput.safeParse(body)
 
-    if(!success){
+    if(!validation.success){
         return NextResponse.json({
             message:"input is not correct"
         })
     }
      try{
         
-       const prisma = new PrismaClient(); 
+      
        const blog = await prisma.blog.update({
         where:{
             id:body.id

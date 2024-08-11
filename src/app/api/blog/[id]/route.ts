@@ -7,6 +7,12 @@ const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     const id = params.id;
+const blogId = Number(id)
+if(isNaN(blogId)){
+    return NextResponse.json({
+        message: 'Invalid blog ID'
+    }, { status: 400 });
+}
 
     try {
         const blog = await prisma.blog.findFirst({
