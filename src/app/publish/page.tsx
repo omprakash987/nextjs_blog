@@ -25,7 +25,7 @@ export default function Publish() {
      console.log("token",token)
 
      try {
-      const response = await axios.post("http://localhost:3000/api/blog/createblog",{
+      const response = await axios.post("https://blog-mania-two.vercel.app/api/blog/createblog",{
 title,content
       },
     {

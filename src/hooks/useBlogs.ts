@@ -18,7 +18,7 @@ export const useBlog = ({id}:{id:string})=>{
 
 
     useEffect(()=>{
-        axios.get(`http://localhost:3000/api/blog/${id}`,{
+        axios.get(`https://blog-mania-two.vercel.app/api/blog/${id}`,{
             headers:{
                 Authorization:localStorage.getItem("token")
 
@@ -45,7 +45,7 @@ export const useBlogs = () => {
     const [blogs, setBlogs] = useState<Blog[]>([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/api/blog/getblog`, {
+        axios.get(`https://blog-mania-two.vercel.app/api/blog/getblog`, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }

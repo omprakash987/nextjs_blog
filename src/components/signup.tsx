@@ -41,7 +41,7 @@ export default function Signup(){
                     }} label="Password" type={"password"} placeholder="passowrd" />
                     <button
                    onClick={async()=>{
-                    const response = await axios.post("http://localhost:3000/api/user/signup",{
+                    const response = await axios.post("https://blog-mania-two.vercel.app/api/user/signup",{
                        name,username,password
                     }); 
                     const token = response.data.token; 
