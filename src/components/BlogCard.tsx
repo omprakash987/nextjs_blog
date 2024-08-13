@@ -23,7 +23,7 @@ export const BlogCard = ({
           <div className="font-extralight pl-2 text-sm flex justify-center flex-col">
             {authorName}
           </div>
-          <div className="flex justify-center flex-col pl-2 flex justify-center flex-col">
+          <div className="flex justify-center flex-col pl-2 ">
              
           </div>
           <div className="pl-2 font-thin text-slate-500 text-sm flex justify-center flex-col">
@@ -33,7 +33,7 @@ export const BlogCard = ({
         <div className="text-xl font-semibold pt-2">{title}</div>
         <div className="text-md font-thin">{content.slice(0, 100) + "..."}</div>
         <div className="text-slate-500 text-sm font-thin pt-4">
-          {`${Math.ceil(content.length / 100)} minute(s) read`}
+          {`${Math.ceil(content.length / 1)} minute(s) read`}
         </div>
       </div>
     </Link>
